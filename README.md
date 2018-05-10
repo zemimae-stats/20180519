@@ -8,3 +8,5 @@ https://docs.google.com/presentation/d/1WDuNVdPqPpAlfILNhpCINDzOTQGye1WyxF4SRYP9
 hsbdemo_kai.xlsxは実習用データです。↓のデータを編集したものです。  
 https://github.com/rlowrance/re/blob/master/hsbdemo.csv
 
+分析の流れはこちら。  
+https://zemimae-stats.github.io/20180519/
