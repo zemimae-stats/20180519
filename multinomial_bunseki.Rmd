@@ -1,0 +1,104 @@
+---
+title: "ゼミ前統計分析勉強会 統計モデリング 第2回"
+author: "Hikaru GOTO: hikaru@jaist.ac.jp"
+date: "2018年5月19日（土）"
+output: 
+  html_document:
+    df_print: paged
+    theme: yeti
+    highlight: haddock
+    number_sections: false
+    toc: true
+    dev: "png"
+    self_contained: false
+---
+
+```{r include = F}
+knitr::opts_knit$set(
+  warning = FALSE,
+  message = FALSE,
+  progress = FALSE,
+  verbose = FALSE
+)
+library(readxl)
+hsbdemo_kai = read_excel("hsbdemo_kai.xlsx")
+```
+
+## データのインポート
+
+RStudio の右上「import Dataset」から From Excel を選ぶ。
+
+## 元データをコピー
+
+```{r }
+d = hsbdemo_kai
+```
+
+## 今回の分析に必要なパッケージのインストール
+
+右側中央にある「install」をクリックし，VGAM と入力して，インストール。または次のコマンドで一発。
+install.packages("VGAM")
+
+## データを確認
+
+```{r }
+head(d)
+```
+
+今回は，生徒の属する教育プログラム（prog）が，性別（gender）や社会経済地位（ses）からどれほど影響を受けるか知りたいとする。
+
+## データの構造を確認
+
+```{r }
+str(d)
+```
+
+## 文字列を因子化する←何のため？
+
+```{r }
+d$prog = factor(d$prog)
+d$gender = as.factor(d$gender)
+d$ses = as.factor(d$ses)
+```
+
+## データの概要を再確認
+
+```{r }
+str(d)
+summary(d)
+```
+
+## 因子を並び変える
+
+```{r }
+d$prog = factor(d$prog, levels = c("general", "vocation", "academic"))
+d$ses = factor(d$ses, levels = c("low", "middle", "high"))
+```
+
+## 思った順番どおりになったか確認
+
+```{r }
+summary(d)
+```
+
+## 多項ロジットモデルによる分析
+
+```{r message=FALSE, warning=FALSE}
+library(VGAM)
+fit = vglm(prog ~ gender + ses, data = d, family = multinomial(refLevel = 1)) 
+```
+
+refLevel は1にしておくこと。1番目の factor を基準して計算するため。
+
+## 結果を見る
+
+```{r }
+summary(fit)
+```
+
+## オッズ比の確認
+
+```{r}
+exp(coef(fit))
+```
+

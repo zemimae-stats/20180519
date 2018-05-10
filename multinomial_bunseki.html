@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Hikaru GOTO: hikaru@jaist.ac.jp" />
+
+
+<title>ゼミ前統計分析勉強会 統計モデリング 第2回</title>
+
+<script src="multinomial_bunseki_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="multinomial_bunseki_files/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="multinomial_bunseki_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="multinomial_bunseki_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="multinomial_bunseki_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="multinomial_bunseki_files/navigation-1.1/tabsets.js"></script>
+<link href="multinomial_bunseki_files/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="multinomial_bunseki_files/pagedtable-1.1/js/pagedtable.js"></script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #0000ff; } /* Keyword */
+code > span.ch { color: #008080; } /* Char */
+code > span.st { color: #008080; } /* String */
+code > span.co { color: #008000; } /* Comment */
+code > span.ot { color: #ff4000; } /* Other */
+code > span.al { color: #ff0000; } /* Alert */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #008000; font-weight: bold; } /* Warning */
+code > span.cn { } /* Constant */
+code > span.sc { color: #008080; } /* SpecialChar */
+code > span.vs { color: #008080; } /* VerbatimString */
+code > span.ss { color: #008080; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { color: #0000ff; } /* ControlFlow */
+code > span.op { } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #ff4000; } /* Preprocessor */
+code > span.do { color: #008000; } /* Documentation */
+code > span.an { color: #008000; } /* Annotation */
+code > span.cv { color: #008000; } /* CommentVar */
+code > span.at { } /* Attribute */
+code > span.in { color: #008000; } /* Information */
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">ゼミ前統計分析勉強会 統計モデリング 第2回</h1>
+<h4 class="author"><em>Hikaru GOTO: <a href="mailto:hikaru@jaist.ac.jp">hikaru@jaist.ac.jp</a></em></h4>
+<h4 class="date"><em>2018年5月19日（土）</em></h4>
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a>データのインポート</a></li>
+<li><a>元データをコピー</a></li>
+<li><a>今回の分析に必要なパッケージのインストール</a></li>
+<li><a>データを確認</a></li>
+<li><a>データの構造を確認</a></li>
+<li><a>文字列を因子化する←何のため？</a></li>
+<li><a>データの概要を再確認</a></li>
+<li><a>因子を並び変える</a></li>
+<li><a>思った順番どおりになったか確認</a></li>
+<li><a>多項ロジットモデルによる分析</a></li>
+<li><a>結果を見る</a></li>
+<li><a>オッズ比の確認</a></li>
+</ul>
+</div>
+
+<div class="section level2">
+<h2>データのインポート</h2>
+<p>RStudio の右上「import Dataset」から From Excel を選ぶ。</p>
+</div>
+<div class="section level2">
+<h2>元データをコピー</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d =<span class="st"> </span>hsbdemo_kai</code></pre></div>
+</div>
+<div class="section level2">
+<h2>今回の分析に必要なパッケージのインストール</h2>
+<p>右側中央にある「install」をクリックし，VGAM と入力して，インストール。または次のコマンドで一発。 install.packages(“VGAM”)</p>
+</div>
+<div class="section level2">
+<h2>データを確認</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d)</code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["prog"],"name":[1],"type":["chr"],"align":["left"]},{"label":["gender"],"name":[2],"type":["chr"],"align":["left"]},{"label":["ses"],"name":[3],"type":["chr"],"align":["left"]},{"label":["read"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["write"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["math"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["science"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"vocation","2":"female","3":"low","4":"34","5":"35","6":"41","7":"29"},{"1":"general","2":"male","3":"middle","4":"34","5":"33","6":"41","7":"36"},{"1":"vocation","2":"male","3":"high","4":"39","5":"39","6":"44","7":"26"},{"1":"vocation","2":"male","3":"low","4":"37","5":"37","6":"42","7":"33"},{"1":"vocation","2":"male","3":"middle","4":"39","5":"31","6":"40","7":"39"},{"1":"general","2":"female","3":"high","4":"42","5":"36","6":"42","7":"31"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>今回は，生徒の属する教育プログラム（prog）が，性別（gender）や社会経済地位（ses）からどれほど影響を受けるか知りたいとする。</p>
+</div>
+<div class="section level2">
+<h2>データの構造を確認</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(d)</code></pre></div>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    200 obs. of  7 variables:
+##  $ prog   : chr  &quot;vocation&quot; &quot;general&quot; &quot;vocation&quot; &quot;vocation&quot; ...
+##  $ gender : chr  &quot;female&quot; &quot;male&quot; &quot;male&quot; &quot;male&quot; ...
+##  $ ses    : chr  &quot;low&quot; &quot;middle&quot; &quot;high&quot; &quot;low&quot; ...
+##  $ read   : num  34 34 39 37 39 42 31 50 39 34 ...
+##  $ write  : num  35 33 39 37 31 36 36 31 41 37 ...
+##  $ math   : num  41 41 44 42 40 42 46 40 33 46 ...
+##  $ science: num  29 36 26 33 39 31 39 34 42 39 ...</code></pre>
+</div>
+<div class="section level2">
+<h2>文字列を因子化する←何のため？</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>prog =<span class="st"> </span><span class="kw">factor</span>(d<span class="op">$</span>prog)
+d<span class="op">$</span>gender =<span class="st"> </span><span class="kw">as.factor</span>(d<span class="op">$</span>gender)
+d<span class="op">$</span>ses =<span class="st"> </span><span class="kw">as.factor</span>(d<span class="op">$</span>ses)</code></pre></div>
+</div>
+<div class="section level2">
+<h2>データの概要を再確認</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(d)</code></pre></div>
+<pre><code>## Classes &#39;tbl_df&#39;, &#39;tbl&#39; and &#39;data.frame&#39;:    200 obs. of  7 variables:
+##  $ prog   : Factor w/ 3 levels &quot;academic&quot;,&quot;general&quot;,..: 3 2 3 3 3 2 3 3 3 3 ...
+##  $ gender : Factor w/ 2 levels &quot;female&quot;,&quot;male&quot;: 1 2 2 2 2 1 2 2 1 2 ...
+##  $ ses    : Factor w/ 3 levels &quot;high&quot;,&quot;low&quot;,&quot;middle&quot;: 2 3 1 2 3 1 3 3 3 3 ...
+##  $ read   : num  34 34 39 37 39 42 31 50 39 34 ...
+##  $ write  : num  35 33 39 37 31 36 36 31 41 37 ...
+##  $ math   : num  41 41 44 42 40 42 46 40 33 46 ...
+##  $ science: num  29 36 26 33 39 31 39 34 42 39 ...</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(d)</code></pre></div>
+<pre><code>##        prog        gender        ses          read           write      
+##  academic:105   female:109   high  :58   Min.   :28.00   Min.   :31.00  
+##  general : 45   male  : 91   low   :47   1st Qu.:44.00   1st Qu.:45.75  
+##  vocation: 50                middle:95   Median :50.00   Median :54.00  
+##                                          Mean   :52.23   Mean   :52.77  
+##                                          3rd Qu.:60.00   3rd Qu.:60.00  
+##                                          Max.   :76.00   Max.   :67.00  
+##       math          science     
+##  Min.   :33.00   Min.   :26.00  
+##  1st Qu.:45.00   1st Qu.:44.00  
+##  Median :52.00   Median :53.00  
+##  Mean   :52.65   Mean   :51.85  
+##  3rd Qu.:59.00   3rd Qu.:58.00  
+##  Max.   :75.00   Max.   :74.00</code></pre>
+</div>
+<div class="section level2">
+<h2>因子を並び変える</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>prog =<span class="st"> </span><span class="kw">factor</span>(d<span class="op">$</span>prog, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;general&quot;</span>, <span class="st">&quot;vocation&quot;</span>, <span class="st">&quot;academic&quot;</span>))
+d<span class="op">$</span>ses =<span class="st"> </span><span class="kw">factor</span>(d<span class="op">$</span>ses, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;low&quot;</span>, <span class="st">&quot;middle&quot;</span>, <span class="st">&quot;high&quot;</span>))</code></pre></div>
+</div>
+<div class="section level2">
+<h2>思った順番どおりになったか確認</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(d)</code></pre></div>
+<pre><code>##        prog        gender        ses          read           write      
+##  general : 45   female:109   low   :47   Min.   :28.00   Min.   :31.00  
+##  vocation: 50   male  : 91   middle:95   1st Qu.:44.00   1st Qu.:45.75  
+##  academic:105                high  :58   Median :50.00   Median :54.00  
+##                                          Mean   :52.23   Mean   :52.77  
+##                                          3rd Qu.:60.00   3rd Qu.:60.00  
+##                                          Max.   :76.00   Max.   :67.00  
+##       math          science     
+##  Min.   :33.00   Min.   :26.00  
+##  1st Qu.:45.00   1st Qu.:44.00  
+##  Median :52.00   Median :53.00  
+##  Mean   :52.65   Mean   :51.85  
+##  3rd Qu.:59.00   3rd Qu.:58.00  
+##  Max.   :75.00   Max.   :74.00</code></pre>
+</div>
+<div class="section level2">
+<h2>多項ロジットモデルによる分析</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(VGAM)
+fit =<span class="st"> </span><span class="kw">vglm</span>(prog <span class="op">~</span><span class="st"> </span>gender <span class="op">+</span><span class="st"> </span>ses, <span class="dt">data =</span> d, <span class="dt">family =</span> <span class="kw">multinomial</span>(<span class="dt">refLevel =</span> <span class="dv">1</span>)) </code></pre></div>
+<p>refLevel は1にしておくこと。1番目の factor を基準して計算するため。</p>
+</div>
+<div class="section level2">
+<h2>結果を見る</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(fit)</code></pre></div>
+<pre><code>## 
+## Call:
+## vglm(formula = prog ~ gender + ses, family = multinomial(refLevel = 1), 
+##     data = d)
+## 
+## 
+## Pearson residuals:
+##                       Min      1Q  Median     3Q   Max
+## log(mu[,2]/mu[,1]) -1.341 -0.3627 -0.2839 0.2121 2.547
+## log(mu[,3]/mu[,1]) -2.120 -0.9449  0.5678 0.9734 1.256
+## 
+## Coefficients: 
+##               Estimate Std. Error z value Pr(&gt;|z|)   
+## (Intercept):1 -0.25052    0.40678  -0.616  0.53799   
+## (Intercept):2  0.24290    0.36037   0.674  0.50029   
+## gendermale:1  -0.11177    0.42185  -0.265  0.79105   
+## gendermale:2  -0.22166    0.37168  -0.596  0.55092   
+## sesmiddle:1    0.74639    0.48408   1.542  0.12310   
+## sesmiddle:2    0.65679    0.43944   1.495  0.13502   
+## seshigh:1      0.05839    0.63788   0.092  0.92707   
+## seshigh:2      1.41187    0.50648   2.788  0.00531 **
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Number of linear predictors:  2 
+## 
+## Names of linear predictors: log(mu[,2]/mu[,1]), log(mu[,3]/mu[,1])
+## 
+## Residual deviance: 391.0417 on 392 degrees of freedom
+## 
+## Log-likelihood: -195.5208 on 392 degrees of freedom
+## 
+## Number of iterations: 4 
+## 
+## No Hauck-Donner effect found in any of the estimates
+## 
+## Reference group is level  1  of the response</code></pre>
+</div>
+<div class="section level2">
+<h2>オッズ比の確認</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">exp</span>(<span class="kw">coef</span>(fit))</code></pre></div>
+<pre><code>## (Intercept):1 (Intercept):2  gendermale:1  gendermale:2   sesmiddle:1 
+##     0.7783961     1.2749445     0.8942539     0.8011858     2.1093799 
+##   sesmiddle:2     seshigh:1     seshigh:2 
+##     1.9285851     1.0601237     4.1036349</code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
